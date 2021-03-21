@@ -9,6 +9,9 @@ services:
     build:
       context: .
       dockerfile: ./container/Dockerfile
+    env_file:
+      - ./.envs/.postgres
+      - ./.envs/.env_vars
     volumes:
       - ./src:/opt/work-dir
     command: sleep infinity
