@@ -43,6 +43,18 @@ def main():
     # Read from kafka
     spark = SparkSession.builder.appName("Driver GPS Streaming").getOrCreate()
 
+    # log4j
+    # log4jLogger= spark._jvm.org.apache.log4j.Logger
+    # logger = log4jLogger.getLogger(__name__)
+
+    log4jLogger = spark._jvm.org.apache.log4j
+    logger = log4jLogger.LogManager.getLogger("spark_app_logs")
+    # logger = log4jLogger.LogManager.getRootLogger("catfish_logs")
+
+    logger.setLevel(log4jLogger.Level.DEBUG)
+
+    logger.info("pyspark script logger initialized")
+
     sdf_locations = (
         spark.readStream.format("kafka")
         .option("kafka.bootstrap.servers", brokerAddresses)

@@ -29,10 +29,11 @@ kafkacat:
 	kafkacat -b localhost:9092 -o beginning -t locations -C -c2 | jq
 
 pg-exec:
-	docker-compose exec postgres psql -h localhost -U admin appdb
+	docker-compose exec postgres psql -h localhost -U admin appdb; \dt+
 
 push-kafka:
 	docker-compose exec spark python produce_data.py
 
 run-streaming:
-	docker-compose exec spark spark-submit --verbose --master local --jars jars/postgresql-9.4.1207.jre6.jar produce_data.py
+	spark-submit --verbose --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.1 \
+	--master local --jars jars/postgresql-9.4.1207.jre6.jar stream_process.py
