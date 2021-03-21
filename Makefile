@@ -4,24 +4,23 @@ logs:
 	docker-compose logs -f
 
 kafka:
-	docker-compose up -d zookeeper
-	docker-compose up -d kafka
+	docker-compose up -d zookeeper kafka
 
 pg:
 	docker-compose up -d postgres
 
 up-app:
-	docker-compose up -d local-spark
+	docker-compose up -d spark
 
 build-app:
-	docker-compose up --build -d local-spark
+	docker-compose up --build -d spark
 
 exec-app:
-	docker-compose exec local-spark bash
+	docker-compose exec spark bash
 
 stop-app:
-	docker-compose stop local-spark
-	docker-compose rm local-spark
+	docker-compose stop spark
+	docker-compose rm spark
 
 down:
 	docker-compose down -v

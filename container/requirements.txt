@@ -2,6 +2,5 @@
 # ------------------------------------------------------------------------------
 numpy
 pandas
-requests
-kafka-python
-confluent-kafka
+scipy
+scikit-learn

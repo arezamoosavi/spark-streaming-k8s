@@ -4,20 +4,13 @@ volumes:
   postgres_data: {}
   postgres_data_backups: {}
 
-services:
-  k8s-spark:
-    build:
-      context: .
-      dockerfile: ./container/k8s/Dockerfile
-    restart: unless-stopped
-    command: sleep infinity
-    
-  local-spark:
+services:    
+  spark:
     build:
       context: .
       dockerfile: ./container/Dockerfile
     volumes:
-      - ./src:/opt/project
+      - ./src:/opt/work-dir
     command: sleep infinity
 
   postgres:
