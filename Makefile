@@ -35,5 +35,6 @@ push-kafka:
 	docker-compose exec spark python produce_data.py
 
 run-streaming:
+	docker-compose exec spark \
 	spark-submit --verbose --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.1 \
 	--master local --jars jars/postgresql-9.4.1207.jre6.jar stream_process.py
