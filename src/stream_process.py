@@ -1,4 +1,4 @@
-import os
+import os, sys
 from functools import partial
 
 from pyspark.sql import SparkSession
@@ -10,12 +10,13 @@ from pyspark.sql.functions import col, udf
 # TOPIC_NAME = os.getenv("TOPIC_NAME")
 # brokerAddresses = os.getenv("brokerAddresses")
 
-
-pg_url = "jdbc:postgresql://postgres:5432/appdb"
+pg_host = str(sys.argv[1])
+pg_url = "jdbc:postgresql://{}:5432/appdb".format(pg_host)
 pg_usr = "admin"
 pg_psw = "admin"
 TOPIC_NAME = "locations"
-brokerAddresses = "kafka:29092"
+brokerAddresses = str(sys.argv[2])
+# brokerAddresses = "kafka:29092"
 
 
 def postgres_sink(df, epoch_id, table_name):
