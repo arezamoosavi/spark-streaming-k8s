@@ -1,0 +1,7 @@
+# Data-ML
+# ------------------------------------------------------------------------------
+numpy
+pandas
+requests
+kafka-python
+confluent-kafka
