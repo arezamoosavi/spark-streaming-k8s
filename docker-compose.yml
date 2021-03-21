@@ -19,6 +19,8 @@ services:
   postgres:
     image: postgres:12.3
     container_name: postgres
+    ports: 
+      - 5432:5432
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - postgres_data_backups:/backups
