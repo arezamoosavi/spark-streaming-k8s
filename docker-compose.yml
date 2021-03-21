@@ -4,7 +4,7 @@ volumes:
   postgres_data: {}
   postgres_data_backups: {}
 
-services:    
+services:
   spark:
     build:
       context: .

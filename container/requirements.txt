@@ -1,6 +1,5 @@
-# Data-ML
-# ------------------------------------------------------------------------------
 numpy
 pandas
-scipy
-scikit-learn
+requests
+kafka-python
+confluent-kafka

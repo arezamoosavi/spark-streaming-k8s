@@ -1,4 +1,4 @@
-.PHONY: logs kafka pg up-app build-app exec-app stop-app down kafkacat
+.PHONY: logs kafka pg up-app build-app exec-app stop-app down kafkacat pg-exec
 
 logs:
 	docker-compose logs -f
@@ -27,3 +27,6 @@ down:
 
 kafkacat:
 	kafkacat -b localhost:9092 -o beginning -t locations -C -c2 | jq
+
+pg-exec:
+	docker-compose exec postgres psql -h localhost -U admin appdb
