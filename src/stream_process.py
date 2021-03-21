@@ -38,57 +38,51 @@ def apply_location_requirement(df):
     return df
 
 
-def main():
+# Read from kafka
+spark = SparkSession.builder.appName("Driver GPS Streaming").getOrCreate()
 
-    # Read from kafka
-    spark = SparkSession.builder.appName("Driver GPS Streaming").getOrCreate()
+# log4j
+# log4jLogger= spark._jvm.org.apache.log4j.Logger
+# logger = log4jLogger.getLogger(__name__)
 
-    # log4j
-    # log4jLogger= spark._jvm.org.apache.log4j.Logger
-    # logger = log4jLogger.getLogger(__name__)
+log4jLogger = spark._jvm.org.apache.log4j
+logger = log4jLogger.LogManager.getLogger("spark_app_logs")
+# logger = log4jLogger.LogManager.getRootLogger("catfish_logs")
 
-    log4jLogger = spark._jvm.org.apache.log4j
-    logger = log4jLogger.LogManager.getLogger("spark_app_logs")
-    # logger = log4jLogger.LogManager.getRootLogger("catfish_logs")
+logger.setLevel(log4jLogger.Level.DEBUG)
 
-    logger.setLevel(log4jLogger.Level.DEBUG)
+logger.info("pyspark script logger initialized")
 
-    logger.info("pyspark script logger initialized")
+sdf_locations = (
+    spark.readStream.format("kafka")
+    .option("kafka.bootstrap.servers", brokerAddresses)
+    .option("subscribe", TOPIC_NAME)
+    .option("startingOffsets", "earliest")
+    .load()
+    .selectExpr("CAST(value AS STRING)",)
+)
 
-    sdf_locations = (
-        spark.readStream.format("kafka")
-        .option("kafka.bootstrap.servers", brokerAddresses)
-        .option("subscribe", TOPIC_NAME)
-        .option("startingOffsets", "earliest")
-        .load()
-        .selectExpr("CAST(value AS STRING)",)
-    )
+sdf_locations_schema = StructType(
+    [
+        StructField("driverId", StringType(), True),
+        StructField("lat", StringType(), True),
+        StructField("lng", StringType(), True),
+        StructField("time", StringType(), True),
+    ]
+)
 
-    sdf_locations_schema = StructType(
-        [
-            StructField("driverId", StringType(), True),
-            StructField("lat", StringType(), True),
-            StructField("lng", StringType(), True),
-            StructField("time", StringType(), True),
-        ]
-    )
+sdf_locations_data = sdf_locations.select(
+    from_json("value", sdf_locations_schema).alias("a")
+).select("a.*")
 
-    sdf_locations_data = sdf_locations.select(
-        from_json("value", sdf_locations_schema).alias("a")
-    ).select("a.*")
+sdf_locations_data = apply_location_requirement(sdf_locations_data)
 
-    sdf_locations_data = apply_location_requirement(sdf_locations_data)
+sdf_locations_data.printSchema()
 
-    sdf_locations_data.printSchema()
+# sdf_locations_data.writeStream.format("console").start().awaitTermination()
 
-    # sdf_locations_data.writeStream.format("console").start().awaitTermination()
+sdf_locations_data.writeStream.outputMode("append").foreachBatch(
+    partial(postgres_sink, table_name="locations")
+).trigger(processingTime="15 minute").start()
 
-    sdf_locations_data.writeStream.outputMode("append").foreachBatch(
-        partial(postgres_sink, table_name="locations")
-    ).trigger(processingTime="15 minute").start()
-
-    spark.streams.awaitAnyTermination()
-
-
-if __name__ == "__main__":
-    main()
+spark.streams.awaitAnyTermination()

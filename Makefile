@@ -30,3 +30,9 @@ kafkacat:
 
 pg-exec:
 	docker-compose exec postgres psql -h localhost -U admin appdb
+
+push-kafka:
+	docker-compose exec spark python produce_data.py
+
+run-streaming:
+	docker-compose exec spark spark-submit --verbose --master local --jars jars/postgresql-9.4.1207.jre6.jar produce_data.py
