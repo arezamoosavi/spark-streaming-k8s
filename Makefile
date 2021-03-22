@@ -4,10 +4,10 @@ logs:
 	docker-compose logs -f
 
 kafka:
-	docker-compose up -d zookeeper kafka
+	docker-compose up --build -d zookeeper kafka
 
 pg:
-	docker-compose up -d postgres
+	docker-compose up --build -d postgres
 
 up-app:
 	docker-compose up -d spark
