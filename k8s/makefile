@@ -49,4 +49,4 @@ run_k8s:
 	kubectl create clusterrolebinding spark-role --clusterrole=edit  --serviceaccount=default:spark --namespace=default
 	kubectl cluster-info
 	kubectl proxy --address='0.0.0.0' --disable-filter=true --port=8443 & 
-	./bin/spark-submit --verbose --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.1 --master k8s://https://192.168.0.2:8443 --deploy-mode cluster --conf spark.executor.instances=1 --conf spark.kubernetes.authenticate.driver.serviceAccountName=spark --conf spark.kubernetes.container.image=192.168.0.1:5000/stream-spark:v2 --name locations-streaming local:///opt/work-dir/stream_process.py 192.168.0.1 192.168.0.1:9092
+	./bin/spark-submit --verbose --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.1 --jars local:///opt/work-dir/jars/postgresql-42.2.5.jar --master k8s://https://192.168.0.2:8443 --deploy-mode cluster --conf spark.executor.instances=1 --conf spark.kubernetes.authenticate.driver.serviceAccountName=spark --conf spark.kubernetes.container.image=192.168.0.1:5000/stream-spark:v2 --name locations-streaming local:///opt/work-dir/stream_process.py 192.168.0.1 192.168.0.1:9092
