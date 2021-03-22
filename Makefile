@@ -4,6 +4,7 @@ logs:
 	docker-compose logs -f
 
 kafka:
+	export KAFKA_HOSTNAME_COMMAND=`hostname -I | cut -d' ' -f1`
 	docker-compose up --build -d zookeeper kafka
 
 pg:
