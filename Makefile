@@ -6,7 +6,7 @@ logs:
 	docker-compose logs -f
 
 kafka:
-	export KAFKA_HOSTNAME_COMMAND `hostname -I | cut -d' ' -f1` && \
+	export KAFKA_HOSTNAME_COMMAND=`hostname -I | cut -d' ' -f1` && \
 	docker-compose up --build -d zookeeper kafka
 
 pg:
@@ -37,8 +37,8 @@ pg-exec:
 push-kafka:
 	docker-compose exec spark python produce_data.py
 
-run-streaming:
+run-local-streaming:
 	docker-compose exec spark \
 	spark-submit --verbose --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.1 \
-	--master local --jars jars/postgresql-42.2.5.jar \
+	--master local --jars /opt/spark/jars/postgresql-42.2.5.jar \
 	stream_process.py postgres kafka:29092
