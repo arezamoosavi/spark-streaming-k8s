@@ -108,8 +108,29 @@ make run-k8s-streaming
 
 ## Results
 
+### It Starts
+
+![alt text](https://github.com/arezamoosavi/spark-streaming-k8s/blob/main/photo/img1.png?raw=true)
+![alt text](https://github.com/arezamoosavi/spark-streaming-k8s/blob/main/photo/img2.png?raw=true)
+
 ### Logs
 
+```bash
+kubectl logs -f pod/location-streaming-app
+```
+
+![alt text](https://github.com/arezamoosavi/spark-streaming-k8s/blob/main/photo/img3.png?raw=true)
+
 ### Spark UI
+```bash
+kubectl port-forward --address 0.0.0.0 pod/location-streaming-app 4040:4040
+```
+![alt text](https://github.com/arezamoosavi/spark-streaming-k8s/blob/main/photo/img4.png?raw=true)
 
 ### Postgres
+
+```bash
+make pg-exec
+select * from locations;
+```
+![alt text](https://github.com/arezamoosavi/spark-streaming-k8s/blob/main/photo/img5.png?raw=true)
