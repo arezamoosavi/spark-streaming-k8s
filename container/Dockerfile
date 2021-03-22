@@ -42,6 +42,7 @@ ENV SPARK_HOME=/opt/spark
 ENV PATH=$PATH:$SPARK_HOME/bin
 ENV PATH=$PATH:$SPARK_HOME/sbin
 ENV PYTHONPATH=$SPARK_HOME/python:$SPARK_HOME/python/lib/py4j-0.10.9-src.zip:$PYTHONPATH
+COPY ./container/jars $SPARK_HOME/jars
 
 COPY container/requirements.txt requirements.txt
 RUN pip install --upgrade pip && \

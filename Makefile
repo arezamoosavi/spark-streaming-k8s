@@ -1,10 +1,12 @@
-.PHONY: logs kafka pg up-app build-app exec-app stop-app down kafkacat pg-exec
+.PHONY: jars_dl logs kafka pg up-app build-app exec-app stop-app down kafkacat pg-exec
 
+jars_dl:
+	sh jarfile_download.sh
 logs:
 	docker-compose logs -f
 
 kafka:
-	export KAFKA_HOSTNAME_COMMAND=`hostname -I | cut -d' ' -f1`
+	export KAFKA_HOSTNAME_COMMAND `hostname -I | cut -d' ' -f1` && \
 	docker-compose up --build -d zookeeper kafka
 
 pg:
