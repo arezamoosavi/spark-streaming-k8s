@@ -34,6 +34,8 @@ init-minikube:
 	minikube addons enable dashboard
 	minikube addons enable metrics-server 
 	kubectl proxy --address='0.0.0.0' --disable-filter=true --port=5885 &
+	kubectl proxy --address='0.0.0.0' --port=36273 --accept-hosts='.*' &
+	netstat -tulp | grep kubectl
 	hostname -I | cut -d' ' -f1
 	curl -X GET http://ip_add:5885/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/#/overview?namespace=default
 
