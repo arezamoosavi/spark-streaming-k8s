@@ -29,7 +29,10 @@ init-minikube:
 	minikube start --insecure-registry="192.168.0.1:5000" --memory 8192 --cpus 4
 	minikube ip
 	minikube status
+	minikube addons list
 	minikube dashboard --url &
+	minikube addons enable dashboard
+	minikube addons enable metrics-server 
 	kubectl proxy --address='0.0.0.0' --disable-filter=true --port=5885 &
 	hostname -I | cut -d' ' -f1
 	curl -X GET http://ip_add:5885/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/#/overview?namespace=default
